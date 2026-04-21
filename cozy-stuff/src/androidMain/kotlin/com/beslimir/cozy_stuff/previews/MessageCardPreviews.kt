@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.MessageCard
+import com.beslimir.cozy_stuff.composables.MessageCard
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 
 @Preview(showBackground = true)
@@ -16,7 +16,6 @@ private fun MessageCardPreview() {
         var bookmarked by remember { mutableStateOf(false) }
 
         MessageCard(
-            header = "Today's Reflection",
             title = "A Spring Morning",
             subtitle = "Subtitle",
             verse = "Still waters run deep, and so do quiet mornings filled with grace and stillness beyond all understanding.",

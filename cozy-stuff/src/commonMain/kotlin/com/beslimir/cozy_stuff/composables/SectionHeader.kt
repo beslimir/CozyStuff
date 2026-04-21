@@ -1,4 +1,4 @@
-package com.beslimir.cozy_stuff.components
+package com.beslimir.cozy_stuff.composables
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

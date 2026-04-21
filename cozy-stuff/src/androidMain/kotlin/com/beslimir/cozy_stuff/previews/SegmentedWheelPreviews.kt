@@ -5,8 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.beslimir.cozy_stuff.components.SegmentedWheel
-import com.beslimir.cozy_stuff.components.WheelSegment
+import com.beslimir.cozy_stuff.composables.SegmentedWheel
+import com.beslimir.cozy_stuff.composables.WheelSegment
 import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 import com.beslimir.cozy_stuff.theme.SeasonCream

@@ -2,7 +2,7 @@ package com.beslimir.cozy_stuff.previews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.MessageListItem
+import com.beslimir.cozy_stuff.composables.MessageListItem
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 
 @Preview(showBackground = true)

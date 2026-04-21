@@ -1,4 +1,4 @@
-package com.beslimir.cozy_stuff.components
+package com.beslimir.cozy_stuff.composables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Eco
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,6 +25,7 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import com.beslimir.cozy_stuff.components.FavoriteToggle
 import com.beslimir.cozy_stuff.theme.AppShapes
 import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Ink60
@@ -43,7 +41,6 @@ fun MessageCard(
     onBookmarkToggle: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    header: String? = null,
     subtitle: String? = null,
     verseMaxLines: Int = 3,
     iconBackgroundColor: Color = Olive,
@@ -81,29 +78,6 @@ fun MessageCard(
                     .padding(start = spacing.medium)
                     .weight(1f)
             ) {
-                if (header != null) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = header,
-                            style = MaterialTheme.typography.labelLarge,
-                            color = mutedColor,
-                            modifier = Modifier.weight(1f)
-                        )
-                        IconButton(onClick = onBookmarkToggle) {
-                            Icon(
-                                imageVector = if (isBookmarked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                contentDescription = if (isBookmarked) "Remove from favorites" else "Add to favorites",
-                                tint = if (isBookmarked) iconBackgroundColor else mutedColor
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(spacing.xxSmall))
-                }
-
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
@@ -115,15 +89,12 @@ fun MessageCard(
                         color = textColor,
                         modifier = Modifier.weight(1f)
                     )
-                    if (header == null) {
-                        IconButton(onClick = onBookmarkToggle) {
-                            Icon(
-                                imageVector = if (isBookmarked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                                contentDescription = if (isBookmarked) "Remove from favorites" else "Add to favorites",
-                                tint = if (isBookmarked) iconBackgroundColor else mutedColor
-                            )
-                        }
-                    }
+                    FavoriteToggle(
+                        isBookmarked = isBookmarked,
+                        onToggle = onBookmarkToggle,
+                        activeColor = iconBackgroundColor,
+                        inactiveColor = mutedColor
+                    )
                 }
 
                 if (subtitle != null) {

@@ -1,4 +1,4 @@
-package com.beslimir.cozy_stuff.components
+package com.beslimir.cozy_stuff.composables
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

@@ -5,7 +5,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.ParchmentSurface
+import com.beslimir.cozy_stuff.composables.ParchmentSurface
 import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 

@@ -1,4 +1,4 @@
-package com.beslimir.cozy_stuff.components
+package com.beslimir.cozy_stuff.composables
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -50,7 +50,7 @@ private const val YEAR_FONT_SIZE = 22
 /**
  * A single segment of the wheel. Colors and label are fully supplied by the caller.
  *
- * @param id       Opaque identifier returned by [SeasonWheel]'s onSeasonClick. Null makes the
+ * @param id       Opaque identifier returned by [SegmentedWheel]'s onSeasonClick. Null makes the
  *                 segment non-tappable.
  * @param label    Text drawn along the arc (uppercase recommended).
  * @param color    Fill color of the segment when [isAvailable] is true.

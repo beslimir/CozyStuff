@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.ListItemCard
+import com.beslimir.cozy_stuff.composables.ListItemCard
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 
 @Preview(showBackground = true)

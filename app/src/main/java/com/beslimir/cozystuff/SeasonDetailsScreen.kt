@@ -9,8 +9,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.MessageListItem
-import com.beslimir.cozy_stuff.components.ScreenHeaderFullWidth
+import com.beslimir.cozy_stuff.composables.MessageListItem
+import com.beslimir.cozy_stuff.composables.ScreenHeaderFullWidth
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 

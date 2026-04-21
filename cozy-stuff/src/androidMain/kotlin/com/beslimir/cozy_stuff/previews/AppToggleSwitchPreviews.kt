@@ -2,7 +2,7 @@ package com.beslimir.cozy_stuff.previews
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.beslimir.cozy_stuff.components.AppToggleSwitch
+import com.beslimir.cozy_stuff.composables.AppToggleSwitch
 import com.beslimir.cozy_stuff.theme.ParchmentTheme
 
 @Preview(showBackground = true)
