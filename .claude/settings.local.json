@@ -28,7 +28,8 @@
       "Bash(./gradlew :composeApp:compileKotlinAndroid --quiet)",
       "Bash(find:*)",
       "Bash(xargs ls *)",
-      "Skill(generate-previews)"
+      "Skill(generate-previews)",
+      "WebSearch"
     ]
   }
 }
