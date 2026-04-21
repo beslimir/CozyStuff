@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Eco
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +27,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import com.beslimir.cozy_stuff.theme.AppShapes
 import com.beslimir.cozy_stuff.theme.Ink
+import com.beslimir.cozy_stuff.theme.Ink60
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
@@ -34,11 +37,14 @@ fun ListItemCard(
     title: String,
     subtitle: String,
     time: String,
+    isBookmarked: Boolean,
+    onBookmarkToggle: () -> Unit,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     iconBackgroundColor: Color = Olive,
     iconTintColor: Color = Linen,
     textColor: Color = Ink,
+    mutedColor: Color = Ink60,
     iconSize: Dp = LocalSpacing.current.xxxLarge
 ) {
     val spacing = LocalSpacing.current
@@ -50,7 +56,7 @@ fun ListItemCard(
         contentPadding = spacing.medium
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.Top
         ) {
             Box(
                 modifier = Modifier
@@ -75,7 +81,8 @@ fun ListItemCard(
                     text = title,
                     style = MaterialTheme.typography.titleMedium,
                     color = textColor,
-                    maxLines = 1
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 Spacer(modifier = Modifier.height(spacing.xxSmall))
                 Text(
@@ -85,18 +92,22 @@ fun ListItemCard(
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-            }
-
-            Column(horizontalAlignment = Alignment.End) {
+                Spacer(modifier = Modifier.height(spacing.xxSmall))
                 Text(
                     text = time,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = textColor
+                    style = MaterialTheme.typography.bodySmall,
+                    color = mutedColor
                 )
+            }
+
+            IconButton(
+                onClick = onBookmarkToggle,
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                    contentDescription = "Open",
-                    tint = textColor
+                    imageVector = if (isBookmarked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = if (isBookmarked) "Remove from favorites" else "Add to favorites",
+                    tint = if (isBookmarked) iconBackgroundColor else mutedColor
                 )
             }
         }
