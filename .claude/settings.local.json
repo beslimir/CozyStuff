@@ -1,0 +1,34 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew compileKotlinMetadata --quiet 2>&1 | tail -20)",
+      "Bash(./gradlew compileDebugKotlinAndroid --dry-run 2>&1 | head -20)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | tail -30)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | tail -20)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | tail -5)",
+      "Bash(./gradlew :composeApp:assembleDebug 2>&1 | grep -i \"error\\\\|failed\" | head -20)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | tail -10)",
+      "Bash(./gradlew clean :composeApp:compileDebugKotlinAndroid 2>&1 | grep -E \"\\(BUILD|error:\\)\" | tail -5)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid --rerun-tasks 2>&1 | tail -3)",
+      "Bash(grep -n \"data class MyJourneyListState\\\\|sealed interface MyJourneyListEvent\\\\|sealed interface MyJourneyListUiAction\" /Users/marin.beslo/StudioProjects/NotifyMe/composeApp/src/commonMain/kotlin/com/example/notifyme/presentation/myjourney/*.kt)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | grep -E \"viewModelOf|deprecated|BUILD\" | tail -10)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid 2>&1 | grep -i \"viewmodel\" | head -5)",
+      "Bash(find /Users/marin.beslo/StudioProjects/NotifyMe/composeApp/src -type f -name *.kt)",
+      "Bash(find /Users/marin.beslo/StudioProjects/NotifyMe -name Season*.kt -o -name Seasons*.kt)",
+      "Bash(./gradlew :composeApp:compileKotlinAndroid)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid)",
+      "Bash(./gradlew :composeApp:compileDebugKotlinAndroid --quiet)",
+      "Bash(find /Users/marin.beslo/StudioProjects/NotifyMe -path */androidMain* -name *.kt)",
+      "Bash(find /Users/marin.beslo/StudioProjects/NotifyMe -name *Preview* -o -name *preview*)",
+      "Bash(grep -rn \"Color\\\\.\\\\\\(White\\\\|Black\\\\|Transparent\\\\|Red\\\\|Green\\\\|Blue\\\\|Gray\\\\|Yellow\\\\|Cyan\\\\|Magenta\\\\\\)\" /Users/marin.beslo/StudioProjects/NotifyMe/composeApp/src --include=*.kt)",
+      "Bash(grep -rn \"\\\\.copy\\(alpha\\\\|color =\" /Users/marin.beslo/StudioProjects/NotifyMe/composeApp/src --include=*.kt)",
+      "Bash(grep \"\\\\.kt$\")",
+      "Read(//tmp/**)",
+      "Bash(./gradlew :composeApp:compileKotlinIosSimulatorArm64 --quiet)",
+      "Bash(./gradlew :composeApp:compileKotlinAndroid --quiet)",
+      "Bash(find:*)",
+      "Bash(xargs ls *)",
+      "Skill(generate-previews)"
+    ]
+  }
+}

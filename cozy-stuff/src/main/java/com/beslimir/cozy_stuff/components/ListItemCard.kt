@@ -1,0 +1,119 @@
+package com.beslimir.cozy_stuff.components
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.Eco
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
+import com.beslimir.cozy_stuff.theme.AppShapes
+import com.beslimir.cozy_stuff.theme.Ink
+import com.beslimir.cozy_stuff.theme.Linen
+import com.beslimir.cozy_stuff.theme.Olive
+import com.beslimir.cozy_stuff.theme.ParchmentTheme
+import com.beslimir.cozy_stuff.tokens.LocalSpacing
+
+@Composable
+fun ListItemCard(
+    title: String,
+    subtitle: String,
+    time: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    iconBackgroundColor: Color = Olive,
+    iconTintColor: Color = Linen,
+    textColor: Color = Ink,
+    iconSize: Dp = LocalSpacing.current.xxxLarge
+) {
+    val spacing = LocalSpacing.current
+
+    ParchmentSurface(
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        contentPadding = spacing.medium
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(iconSize)
+                    .clip(AppShapes.small)
+                    .background(iconBackgroundColor),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Eco,
+                    contentDescription = "Leaf",
+                    tint = iconTintColor
+                )
+            }
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = spacing.medium)
+            ) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = textColor,
+                    maxLines = 1
+                )
+                Spacer(modifier = Modifier.height(spacing.xxSmall))
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = textColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = time,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = textColor
+                )
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.KeyboardArrowRight,
+                    contentDescription = "Open",
+                    tint = textColor
+                )
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ListItemCardPreview() {
+    ParchmentTheme {
+        ListItemCard(
+            title = "Spring Season",
+            subtitle = "Apr 5 – Jun 24 · Green",
+            time = "10:30 AM",
+            onClick = {}
+        )
+    }
+}
