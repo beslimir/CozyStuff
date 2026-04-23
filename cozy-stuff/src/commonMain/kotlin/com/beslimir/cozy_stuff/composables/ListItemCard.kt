@@ -30,6 +30,11 @@ import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Generic list-row card with a colored icon box, title, subtitle, time label, and
+ * a bookmark toggle; use for browsable item lists.
+ */
+
 @Composable
 fun ListItemCard(
     title: String,
@@ -48,54 +53,57 @@ fun ListItemCard(
     val spacing = LocalSpacing.current
 
     ParchmentSurface(
-        modifier = modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
+        modifier = modifier.fillMaxWidth(),
         contentPadding = spacing.medium
     ) {
-        Row(
-            verticalAlignment = Alignment.Top
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(iconSize)
-                    .clip(AppShapes.small)
-                    .background(iconBackgroundColor),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Eco,
-                    contentDescription = "Leaf",
-                    tint = iconTintColor
-                )
-            }
-
-            Column(
+        Row(verticalAlignment = Alignment.Top) {
+            Row(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(start = spacing.medium)
+                    .clickable { onClick() },
+                verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = textColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(spacing.xxSmall))
-                Text(
-                    text = subtitle,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = textColor,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-                Spacer(modifier = Modifier.height(spacing.xxSmall))
-                Text(
-                    text = time,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = mutedColor
-                )
+                Box(
+                    modifier = Modifier
+                        .size(iconSize)
+                        .clip(AppShapes.small)
+                        .background(iconBackgroundColor),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Eco,
+                        contentDescription = "Leaf",
+                        tint = iconTintColor
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = spacing.medium)
+                ) {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = textColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(spacing.xxSmall))
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = textColor,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(spacing.xxSmall))
+                    Text(
+                        text = time,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = mutedColor
+                    )
+                }
             }
 
             FavoriteToggle(

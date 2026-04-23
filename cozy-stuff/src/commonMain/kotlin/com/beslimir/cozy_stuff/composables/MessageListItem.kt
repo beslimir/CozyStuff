@@ -30,6 +30,11 @@ import com.beslimir.cozy_stuff.theme.Linen90
 import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Numbered list row showing a message title, date/reference, delivery status indicator,
+ * and a chevron; use in ordered message or lesson lists.
+ */
+
 @Composable
 fun MessageListItem(
     index: Int,
@@ -58,7 +63,6 @@ fun MessageListItem(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Leading index circle
             Box(
                 modifier = Modifier
                     .size(indexBoxSize)
@@ -93,7 +97,6 @@ fun MessageListItem(
                 )
             }
 
-            // Status + chevron
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (delivered) {
                     Icon(
@@ -102,7 +105,6 @@ fun MessageListItem(
                         tint = deliveredIconColor
                     )
                 } else {
-                    // small muted dot
                     Box(
                         modifier = Modifier
                             .size(statusDotSize)

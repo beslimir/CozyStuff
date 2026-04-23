@@ -15,6 +15,11 @@ import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Base sketchy container that applies clip, Linen background, a jittered ink border,
+ * and a soft shadow; use as the foundation for every new card, panel, or container.
+ */
+
 @Composable
 fun ParchmentSurface(
     modifier: Modifier = Modifier,

@@ -13,11 +13,16 @@ import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Parchment card displaying a section title, period label, description, and a progress bar;
+ * use as the introductory header for different cases.
+ */
+
 @Composable
 fun SectionHeader(
     title: String,
-    period: String,            // e.g., "Apr 5 – Jun 24 · White"
-    description: String,       // short season description
+    period: String,
+    description: String,
     current: Int,
     total: Int,
     modifier: Modifier = Modifier,
@@ -52,14 +57,13 @@ fun SectionHeader(
                 color = textColor
             )
             Spacer(modifier = Modifier.height(spacing.medium))
-            // Progress bar + label like "12 of 50 reflections received"
             ParchmentProgressLine(
                 current = current,
                 total = total,
                 showLabel = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(spacing.small) // height token for visual balance
+                    .height(spacing.small)
             )
             Spacer(modifier = Modifier.height(spacing.xxSmall))
             Text(

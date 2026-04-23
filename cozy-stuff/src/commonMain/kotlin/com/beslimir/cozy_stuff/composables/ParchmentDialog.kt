@@ -17,6 +17,11 @@ import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Modal dialog with a ParchmentSurface container, a title, body text,
+ * and Secondary/Primary action buttons.
+ */
+
 @Composable
 fun ParchmentDialog(
     title: String,

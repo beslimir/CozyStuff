@@ -9,6 +9,10 @@ import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.theme.Olive35
 import com.beslimir.cozy_stuff.theme.White
 
+/**
+ * Themed Material3 toggle switch with Olive track; use for on/off settings and preference toggles.
+ */
+
 @Composable
 fun AppToggleSwitch(
     checked: Boolean,

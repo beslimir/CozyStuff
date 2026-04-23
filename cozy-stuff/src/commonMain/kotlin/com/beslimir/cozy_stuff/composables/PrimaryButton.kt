@@ -23,6 +23,11 @@ import com.beslimir.cozy_stuff.theme.Ink67
 import com.beslimir.cozy_stuff.theme.Transparent
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Primary call-to-action button with a Clay background and a sketchy ink border; use for the main
+ * confirmative action on a screen or in a dialog.
+ */
+
 @Composable
 fun PrimaryButton(
     text: String,

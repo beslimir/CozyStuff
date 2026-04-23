@@ -22,12 +22,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.sp
-import com.beslimir.cozy_stuff.theme.Black06
 import com.beslimir.cozy_stuff.theme.Ink
-import com.beslimir.cozy_stuff.theme.Ink18
-import com.beslimir.cozy_stuff.theme.Ink45
-import com.beslimir.cozy_stuff.theme.Ink60
-import com.beslimir.cozy_stuff.theme.Ink80
 import com.beslimir.cozy_stuff.theme.Linen
 import kotlin.math.PI
 import kotlin.math.atan2
@@ -37,28 +32,18 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
 
-
-// Styling knobs
 private const val OUTLINE_STROKE = 1.5f
 private const val OUTLINE_WOBBLE = 1.6f
 private const val OUTLINE_SEED = 2024
 
-private const val CURRENT_SEASON_FONT_SIZE = 10.5
-private const val SEASON_FONT_SIZE = 9.5
+private val UnselectedLabelColor = Ink.copy(alpha = 0.80f)
+private val UnavailableLabelColor = Ink.copy(alpha = 0.45f)
+private val UnavailableSegmentFill = Ink.copy(alpha = 0.18f)
+
+private const val CURRENT_SEGMENT_FONT_SIZE = 10.5
+private const val SEGMENT_FONT_SIZE = 9.5
 private const val YEAR_FONT_SIZE = 22
 
-/**
- * A single segment of the wheel. Colors and label are fully supplied by the caller.
- *
- * @param id       Opaque identifier returned by [SegmentedWheel]'s onSeasonClick. Null makes the
- *                 segment non-tappable.
- * @param label    Text drawn along the arc (uppercase recommended).
- * @param color    Fill color of the segment when [isAvailable] is true.
- * @param onColor  Label color used when this segment [isCurrent].
- * @param sweepFraction Fraction of the full circle (0f–1f). All segments should sum to 1f.
- * @param isAvailable   Whether the segment is interactive and drawn in its own [color].
- * @param isCurrent     Whether this is the active segment (popped out, highlighted).
- */
 @Immutable
 data class WheelSegment(
     val id: String?,
@@ -70,11 +55,6 @@ data class WheelSegment(
     val isCurrent: Boolean,
 )
 
-/**
- * Computed layout for a single segment: the source [WheelSegment] plus its resolved
- * [startAngle] and [sweepAngle] in degrees. Exposed so callers can inspect the final
- * geometry (e.g. to draw overlays or run hit tests outside the composable).
- */
 @Immutable
 data class WheelSegmentBuilder(
     val segment: WheelSegment,
@@ -82,18 +62,22 @@ data class WheelSegmentBuilder(
     val sweepAngle: Float,
 )
 
+/**
+ * Canvas-drawn radial segment selector where each WheelSegment occupies an arc; the current
+ * segment pops outward and tapping an available segment calls onSegmentClick with its id.
+ */
+
 @Composable
 fun SegmentedWheel(
     segments: List<WheelSegment>,
     year: Int,
-    onSeasonClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    onSegmentClick: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     if (segments.isEmpty()) return
 
     val textMeasurer = rememberTextMeasurer()
 
-    // Build segments with tiny gaps so ink lines read well
     val wheelSegmentBuilderList = remember(segments) {
         val gapDeg = 3f
         var currentAngle = -90f
@@ -106,7 +90,6 @@ fun SegmentedWheel(
         }
     }
 
-    // Rotate so current season sits at 12 o'clock
     val rotationOffset = remember(wheelSegmentBuilderList) {
         val currentSeg = wheelSegmentBuilderList.find { it.segment.isCurrent }
         if (currentSeg != null) {
@@ -117,23 +100,27 @@ fun SegmentedWheel(
 
     val displaySegments = remember(wheelSegmentBuilderList, rotationOffset) {
         if (rotationOffset == 0f) wheelSegmentBuilderList
-        else wheelSegmentBuilderList.map { seg ->
-            seg.copy(startAngle = seg.startAngle + rotationOffset)
-        }
+        else wheelSegmentBuilderList.map { seg -> seg.copy(startAngle = seg.startAngle + rotationOffset) }
     }
 
-    // Pre-measure label characters (serif for classic feel)
     val charMeasurements = remember(displaySegments) {
         displaySegments.map { seg ->
             val isCurrent = seg.segment.isCurrent
             val labelStyle = TextStyle(
                 fontFamily = FontFamily.Serif,
-                fontSize = if (isCurrent) CURRENT_SEASON_FONT_SIZE.sp else SEASON_FONT_SIZE.sp,
+                fontSize = if (isCurrent) CURRENT_SEGMENT_FONT_SIZE.sp else SEGMENT_FONT_SIZE.sp,
                 fontWeight = if (isCurrent) FontWeight.SemiBold else FontWeight.Normal,
                 color = Ink
             )
-            seg.segment.label.map { char ->
-                textMeasurer.measure(char.toString(), labelStyle, softWrap = false, maxLines = 1)
+            seg.segment.label.split(" ").map { word ->
+                word.map { char ->
+                    textMeasurer.measure(
+                        char.toString(),
+                        labelStyle,
+                        softWrap = false,
+                        maxLines = 1
+                    )
+                }
             }
         }
     }
@@ -147,8 +134,8 @@ fun SegmentedWheel(
                 val dy = tap.y - cy
                 val dist = sqrt(dx * dx + dy * dy)
                 val minDim = min(size.width, size.height)
-                val innerR = minDim * 0.20f
-                val outerR = minDim * 0.43f
+                val innerR = minDim * 0.24f
+                val outerR = minDim * 0.47f
 
                 if (dist in innerR..outerR) {
                     val rawAngle = atan2(dy, dx) * 180f / PI.toFloat()
@@ -156,7 +143,7 @@ fun SegmentedWheel(
 
                     displaySegments.forEach { seg ->
                         if (!seg.segment.isAvailable) return@forEach
-                        val seasonId = seg.segment.id ?: return@forEach
+                        val segmentId = seg.segment.id ?: return@forEach
                         val normStart = (seg.startAngle + 90f + 360f) % 360f
                         val normEnd = (normStart + seg.sweepAngle) % 360f
                         val inArc = if (normStart <= normEnd) {
@@ -165,7 +152,7 @@ fun SegmentedWheel(
                             tapAngle >= normStart || tapAngle <= normEnd
                         }
                         if (inArc) {
-                            onSeasonClick(seasonId)
+                            onSegmentClick(segmentId)
                             return@detectTapGestures
                         }
                     }
@@ -177,21 +164,17 @@ fun SegmentedWheel(
         val cy = size.height / 2f
         val minDim = size.minDimension
 
-        // Radii
-        val innerR = minDim * 0.20f
-        val normalOuterR = minDim * 0.36f
-        val popOutOuterR = minDim * 0.41f
-        val popOutOffset = minDim * 0.03f
-        val labelR = minDim * 0.395f
+        val innerR = minDim * 0.24f
+        val normalOuterR = minDim * 0.42f
+        val popOutOuterR = minDim * 0.47f
+        val popOutOffset = minDim * 0.025f
 
-        // Soft shadow under the whole wheel
         drawCircle(
-            color = Black06,
+            color = Color.Black.copy(alpha = 0.06f),
             radius = normalOuterR,
             center = Offset(cx + 2f, cy + 3f)
         )
 
-        // Subtle ring behind everything
         drawCircle(
             color = Linen,
             radius = normalOuterR + 6f,
@@ -202,7 +185,7 @@ fun SegmentedWheel(
             val isAvailable = seg.segment.isAvailable
             val isCurrent = seg.segment.isCurrent
 
-            val fillColor = if (isAvailable) seg.segment.color else Ink18
+            val fillColor = if (isAvailable) seg.segment.color else UnavailableSegmentFill
 
             val midAngle = seg.startAngle + seg.sweepAngle / 2f
             val midRad = degToRad(midAngle)
@@ -212,7 +195,6 @@ fun SegmentedWheel(
             val ringWidth = outerR - innerR
             val midR = (innerR + outerR) / 2f
 
-            // Segment fill
             drawArc(
                 color = fillColor,
                 startAngle = seg.startAngle,
@@ -223,7 +205,6 @@ fun SegmentedWheel(
                 style = Stroke(width = ringWidth, cap = StrokeCap.Butt)
             )
 
-            // Inner highlight on the current season
             if (isCurrent) {
                 drawArc(
                     color = fillColor.copy(alpha = 0.28f),
@@ -236,7 +217,6 @@ fun SegmentedWheel(
                 )
             }
 
-            // Sketchy ink outline
             drawSegmentInkOutline(
                 center = Offset(cx + popX, cy + popY),
                 innerR = innerR,
@@ -246,52 +226,67 @@ fun SegmentedWheel(
                 ink = Ink
             )
 
-            // Label color: onColor for current, Ink80 for available, Ink45 for unavailable
             val labelColor = when {
                 isCurrent -> seg.segment.onColor
-                isAvailable -> Ink80
-                else -> Ink45
+                isAvailable -> UnselectedLabelColor
+                else -> UnavailableLabelColor
             }
-            val charResults = charMeasurements[index]
-
-            // Place characters along the arc
+            val wordResults = charMeasurements[index]
+            val wordCount = wordResults.size
+            val lineSpacing =
+                wordResults.firstOrNull()?.firstOrNull()?.size?.height?.toFloat() ?: 0f
             val normalizedMid = ((midAngle + 90f) % 360f + 360f) % 360f
             val isTopHalf = normalizedMid <= 90f || normalizedMid >= 270f
-            val totalWidth = charResults.sumOf { it.size.width }.toFloat()
-            val totalArcAngleRad = totalWidth / labelR
-            val startAngleRad: Float
-            val angleSign: Float
-            if (isTopHalf) {
-                startAngleRad = midRad - totalArcAngleRad / 2f
-                angleSign = 1f
-            } else {
-                startAngleRad = midRad + totalArcAngleRad / 2f
-                angleSign = -1f
-            }
 
-            var cumWidth = 0f
-            charResults.forEach { charResult ->
-                val charW = charResult.size.width.toFloat()
-                val charH = charResult.size.height.toFloat()
-                val charAngleRad = startAngleRad + angleSign * (cumWidth + charW / 2f) / labelR
-                val charX = cx + cos(charAngleRad) * labelR + popX
-                val charY = cy + sin(charAngleRad) * labelR + popY
-                val charAngleDeg = charAngleRad * 180f / PI.toFloat()
-                val charRotation = if (isTopHalf) charAngleDeg + 90f else charAngleDeg - 90f
+            val labelPadding = lineSpacing * 0.3f
 
-                rotate(charRotation, pivot = Offset(charX, charY)) {
-                    drawText(
-                        textLayoutResult = charResult,
-                        color = labelColor,
-                        topLeft = Offset(charX - charW / 2f, charY - charH / 2f)
-                    )
+            wordResults.forEachIndexed { wordIdx, charResults ->
+                val wordLabelR = if (isCurrent) {
+                    outerR - (wordIdx + 0.5f) * lineSpacing - labelPadding
+                } else {
+                    val rowFromRing = if (isTopHalf) wordCount - 1 - wordIdx else wordIdx
+                    outerR + (rowFromRing + 0.5f) * lineSpacing + labelPadding
                 }
-                cumWidth += charW
+                val totalWidth = charResults.sumOf { it.size.width }.toFloat()
+                val totalArcAngleRad = totalWidth / wordLabelR
+                val startAngleRad: Float
+                val angleSign: Float
+                if (isTopHalf) {
+                    startAngleRad = midRad - totalArcAngleRad / 2f
+                    angleSign = 1f
+                } else {
+                    startAngleRad = midRad + totalArcAngleRad / 2f
+                    angleSign = -1f
+                }
+
+                var cumWidth = 0f
+                charResults.forEach { charResult ->
+                    val charW = charResult.size.width.toFloat()
+                    val charH = charResult.size.height.toFloat()
+                    val charAngleRad =
+                        startAngleRad + angleSign * (cumWidth + charW / 2f) / wordLabelR
+                    val charX = cx + cos(charAngleRad) * wordLabelR + popX
+                    val charY = cy + sin(charAngleRad) * wordLabelR + popY
+                    val charAngleDeg = charAngleRad * 180f / PI.toFloat()
+                    val charRotation = if (isTopHalf) charAngleDeg + 90f else charAngleDeg - 90f
+
+                    rotate(charRotation, pivot = Offset(charX, charY)) {
+                        drawText(
+                            textLayoutResult = charResult,
+                            color = labelColor,
+                            topLeft = Offset(charX - charW / 2f, charY - charH / 2f)
+                        )
+                    }
+                    cumWidth += charW
+                }
             }
         }
 
-        // Center hole and ink ring
-        drawCircle(color = Linen, radius = innerR * 0.92f, center = Offset(cx, cy))
+        drawCircle(
+            color = Linen,
+            radius = innerR * 0.92f,
+            center = Offset(cx, cy)
+        )
         drawJitterCircle(
             center = Offset(cx, cy),
             radius = innerR * 0.92f,
@@ -301,17 +296,6 @@ fun SegmentedWheel(
             seed = OUTLINE_SEED + 7
         )
 
-        // Decorative thin ring around the wheel
-        drawJitterCircle(
-            center = Offset(cx, cy),
-            radius = normalOuterR + 2f,
-            color = Ink60,
-            strokeWidth = 1.2f,
-            wobble = OUTLINE_WOBBLE * 0.8f,
-            seed = OUTLINE_SEED + 11
-        )
-
-        // Year in the center
         val yearStyle = TextStyle(
             fontFamily = FontFamily.Serif,
             fontSize = YEAR_FONT_SIZE.sp,
@@ -329,8 +313,6 @@ fun SegmentedWheel(
     }
 }
 
-/* ---------- Sketch helpers for inked outlines ---------- */
-
 private fun degToRad(deg: Float): Float = deg * PI.toFloat() / 180f
 
 private fun DrawScope.drawSegmentInkOutline(
@@ -342,34 +324,44 @@ private fun DrawScope.drawSegmentInkOutline(
     ink: Color
 ) {
     val outerPath =
-        jitteredArcPath(center, outerR, startAngle, sweepAngle, OUTLINE_WOBBLE, OUTLINE_SEED)
+        jitteredArcPath(
+            center, outerR, startAngle, sweepAngle,
+            OUTLINE_WOBBLE,
+            OUTLINE_SEED
+        )
     drawPath(
-        outerPath,
-        ink,
-        style = Stroke(OUTLINE_STROKE, pathEffect = PathEffect.cornerPathEffect(6f))
+        path = outerPath,
+        color = ink,
+        style = Stroke(width = OUTLINE_STROKE, pathEffect = PathEffect.cornerPathEffect(6f))
     )
 
     val innerPath =
-        jitteredArcPath(center, innerR, startAngle, sweepAngle, OUTLINE_WOBBLE, OUTLINE_SEED + 3)
+        jitteredArcPath(
+            center, innerR, startAngle, sweepAngle,
+            OUTLINE_WOBBLE, OUTLINE_SEED + 3
+        )
     drawPath(
-        innerPath,
-        ink,
-        style = Stroke(OUTLINE_STROKE, pathEffect = PathEffect.cornerPathEffect(6f))
+        path = innerPath,
+        color = ink,
+        style = Stroke(width = OUTLINE_STROKE, pathEffect = PathEffect.cornerPathEffect(6f))
     )
 
     val startLine = jitteredLinePath(
-        polarToCartesian(center, innerR, startAngle),
-        polarToCartesian(center, outerR, startAngle),
-        OUTLINE_WOBBLE, OUTLINE_SEED + 5
+        from = polarToCartesian(center, innerR, startAngle),
+        to = polarToCartesian(center, outerR, startAngle),
+        wobble = OUTLINE_WOBBLE,
+        seed = OUTLINE_SEED + 5
     )
-    drawPath(startLine, ink, style = Stroke(OUTLINE_STROKE))
+    drawPath(path = startLine, color = ink, style = Stroke(width = OUTLINE_STROKE))
 
+    val endAngle = startAngle + sweepAngle
     val endLine = jitteredLinePath(
-        polarToCartesian(center, innerR, startAngle + sweepAngle),
-        polarToCartesian(center, outerR, startAngle + sweepAngle),
-        OUTLINE_WOBBLE, OUTLINE_SEED + 6
+        from = polarToCartesian(center, innerR, endAngle),
+        to = polarToCartesian(center, outerR, endAngle),
+        wobble = OUTLINE_WOBBLE,
+        seed = OUTLINE_SEED + 6
     )
-    drawPath(endLine, ink, style = Stroke(OUTLINE_STROKE))
+    drawPath(path = endLine, color = ink, style = Stroke(width = OUTLINE_STROKE))
 }
 
 private fun polarToCartesian(center: Offset, radius: Float, angleDeg: Float): Offset {
@@ -384,13 +376,15 @@ private fun jitteredArcPath(
     sweepAngle: Float,
     wobble: Float,
     seed: Int,
-    samples: Int = 72,
+    samples: Int = 72
 ): Path {
     val rnd = Random(seed)
     fun j() = (rnd.nextFloat() - 0.5f) * 2f * wobble
     val p = Path()
     for (i in 0..samples) {
-        val a = degToRad(startAngle + sweepAngle * (i / samples.toFloat()))
+        val t = i / samples.toFloat()
+        val ang = startAngle + sweepAngle * t
+        val a = degToRad(ang)
         val x = center.x + cos(a) * (radius + j())
         val y = center.y + sin(a) * (radius + j())
         if (i == 0) p.moveTo(x, y) else p.lineTo(x, y)
@@ -403,7 +397,7 @@ private fun jitteredLinePath(
     to: Offset,
     wobble: Float,
     seed: Int,
-    samples: Int = 16,
+    samples: Int = 16
 ): Path {
     val rnd = Random(seed)
     fun j() = (rnd.nextFloat() - 0.5f) * 2f * wobble
@@ -424,8 +418,12 @@ private fun DrawScope.drawJitterCircle(
     strokeWidth: Float,
     wobble: Float,
     seed: Int,
-    samples: Int = 100,
+    samples: Int = 100
 ) {
     val path = jitteredArcPath(center, radius, 0f, 360f, wobble, seed, samples)
-    drawPath(path, color, style = Stroke(strokeWidth, pathEffect = PathEffect.cornerPathEffect(8f)))
+    drawPath(
+        path = path,
+        color = color,
+        style = Stroke(width = strokeWidth, pathEffect = PathEffect.cornerPathEffect(8f))
+    )
 }

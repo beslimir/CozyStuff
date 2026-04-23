@@ -10,6 +10,10 @@ import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.theme.Olive40
 import com.beslimir.cozy_stuff.theme.White
 
+/**
+ * Themed Material3 checkbox with Olive styling; use wherever a boolean item-level toggle is needed.
+ */
+
 @Composable
 fun AppCheckbox(
     checked: Boolean,

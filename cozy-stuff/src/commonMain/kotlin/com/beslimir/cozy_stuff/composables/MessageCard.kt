@@ -33,6 +33,11 @@ import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Feature card presenting a titled message or daily reflection with a verse excerpt, icon box,
+ * and bookmark toggle; intended as the primary content card on list and detail screens.
+ */
+
 @Composable
 fun MessageCard(
     title: String,

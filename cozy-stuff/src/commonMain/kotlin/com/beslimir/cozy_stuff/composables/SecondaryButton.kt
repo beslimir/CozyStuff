@@ -22,6 +22,11 @@ import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.theme.Transparent
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Secondary action button with a Linen background and a sketchy ink border; pair with
+ * PrimaryButton for cancel or alternative actions.
+ */
+
 @Composable
 fun SecondaryButton(
     text: String,

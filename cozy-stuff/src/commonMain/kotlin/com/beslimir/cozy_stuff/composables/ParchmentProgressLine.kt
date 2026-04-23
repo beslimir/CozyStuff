@@ -20,6 +20,11 @@ import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Olive
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Canvas-drawn horizontal progress bar with a rounded fill and an optional "current / total"
+ * label; use to visualize series or session completion.
+ */
+
 @Composable
 fun ParchmentProgressLine(
     current: Int,
@@ -42,14 +47,12 @@ fun ParchmentProgressLine(
             val h = size.height
             val radius = h / 2f
 
-            // Track
             drawRoundRect(
                 color = trackColor,
                 size = Size(w, h),
                 cornerRadius = CornerRadius(radius, radius)
             )
 
-            // Ink outline (slightly sketchy using corner path effect)
             drawRoundRect(
                 color = inkColor,
                 size = Size(w, h),
@@ -57,7 +60,6 @@ fun ParchmentProgressLine(
                 style = Stroke(width = 1.5f, pathEffect = PathEffect.cornerPathEffect(radius))
             )
 
-            // Fill
             val fillW = w * progress
             if (fillW > 0f) {
                 drawRoundRect(
@@ -67,7 +69,6 @@ fun ParchmentProgressLine(
                 )
             }
 
-            // Accent dot at far right of track (like the reference)
             val dotRadius = h * 0.25f
             drawCircle(
                 color = trackColor,

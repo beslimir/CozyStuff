@@ -6,6 +6,11 @@ import androidx.compose.ui.graphics.Color
 import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 
+/**
+ * Pre-configured destructive-action dialog with a title, body, and confirm/cancel buttons;
+ * wraps ParchmentDialog with "Delete" defaults.
+ */
+
 @Composable
 fun ConfirmationDialog(
     title: String = "Delete item?",

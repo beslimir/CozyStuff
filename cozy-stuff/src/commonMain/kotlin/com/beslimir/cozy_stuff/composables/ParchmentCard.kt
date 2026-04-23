@@ -17,6 +17,11 @@ import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
 
+/**
+ * Material3 Card with a clean ink border and slight elevation; use when many cards stack in a
+ * list or grid and a sketchy border would feel cluttered.
+ */
+
 @Composable
 fun ParchmentCard(
     modifier: Modifier = Modifier,
