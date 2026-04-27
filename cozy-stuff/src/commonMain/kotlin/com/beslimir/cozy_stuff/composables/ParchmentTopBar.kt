@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.beslimir.cozy_stuff.theme.Ink
 import com.beslimir.cozy_stuff.theme.Linen
 import com.beslimir.cozy_stuff.tokens.LocalSpacing
@@ -27,6 +29,8 @@ import com.beslimir.cozy_stuff.tokens.LocalSpacing
  * Simple full-bleed top app bar with a title, an optional back arrow, and a trailing actions slot;
  * respects status-bar insets.
  */
+
+const val TOOLBAR_HEIGHT = 56
 
 @Composable
 fun ParchmentTopBar(
@@ -49,6 +53,7 @@ fun ParchmentTopBar(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(min = TOOLBAR_HEIGHT.dp)
                 .padding(horizontal = spacing.medium, vertical = spacing.small),
             verticalAlignment = Alignment.CenterVertically
         ) {
